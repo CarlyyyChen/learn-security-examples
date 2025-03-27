@@ -1,4 +1,4 @@
-# Tampering
+# Information Disclosure
 
 This example demonstrates information disclosure by injecting malicious query objects to a NoSQL database.
 
@@ -31,5 +31,12 @@ This will create a database in MongoDB called __infodisclosure__. Verify its pre
 Answer the following:
 
 1. Briefly explain the potential vulnerabilities in **insecure.ts**
+The server assumes the user input would be a string, and directly use the input in the database query. But the user input can be some database query or a malicious object instead of a string that will result in the leak of sensitive information like user login data.
+
 2. Briefly explain how a malicious attacker can exploit them.
+The attacker can inject some database query like `username[$ne]=` as the input to be executed when the server receives and deals with the request, in order to retrieve sensitive data from the database.
+
 3. Briefly explain the defensive techniques used in **secure.ts** to prevent the information disclosure vulnerability?
+- It checks if the type of `username` is `string`. This check ensures only string inputs are processed. It blocks malicious query object injection like `username[$ne]=`, which could trigger NoSQL injection and lead to unauthorized data exposure.
+- It removes non-alphanumeric characters in the user input so that the username input is sanitized to prevent NoSQL injection.
+- It uses a try-catch block to handle error when requesting the user info, this prevents the server from being unavailable, and returning a generic error message avoids accidental leakage of stack traces or database internals

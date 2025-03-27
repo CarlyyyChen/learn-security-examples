@@ -1,14 +1,15 @@
-import express, { Request, Response } from 'express';
-import mongoose, { Schema, Document, Model } from 'mongoose';
-import rateLimit from 'express-rate-limit';
+import express, { Request, Response } from "express";
+import mongoose, { Schema, Document, Model } from "mongoose";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const port = 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/infodisclosure')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
+mongoose
+  .connect("mongodb://localhost:27017/infodisclosure")
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 
 // Define an interface for the User document
 interface IUser extends Document {
@@ -23,17 +24,20 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
 });
 
 // Create a Mongoose model based on the schema
-const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
+const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 
 // Configure rate limiter
+// There is only one query, why do we need to use this rate Limiter?
+// This is an example of how to adding a rate limiter
+// Below is not realistic, ususally we should allow 500 requests per second
 const limiter = rateLimit({
   windowMs: 5 * 1000, // 5 seconds
   max: 1, // Limit each IP to 1 request per `windowMs`
-  message: 'Server is busy, please try again later.',
+  message: "Server is busy, please try again later.",
 });
 
 // Route to authenticate user (VULNERABLE TO NOSQL INJECTION)
-app.get('/userinfo', limiter, async (req: Request, res: Response) => {
+app.get("/userinfo", limiter, async (req: Request, res: Response) => {
   const { id } = req.query;
 
   try {
@@ -43,11 +47,11 @@ app.get('/userinfo', limiter, async (req: Request, res: Response) => {
     if (user) {
       res.send(`User: ${user}`);
     } else {
-      res.status(401).send('User not found');
+      res.status(401).send("User not found");
     }
   } catch (error) {
-    console.error('Error querying database:', error);
-    res.status(500).send('Internal server error');
+    console.error("Error querying database:", error);
+    res.status(500).send("Internal server error");
   }
 });
 
