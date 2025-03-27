@@ -34,7 +34,7 @@ Answer the following:
 - It does not use a rate limiter so the attacker can send a lot of requests to overwhelm the server and make it unavailable.
 - It does not properly handle errors when requesting for user info. The server assumes that `req.query.id` will always be a valid MongoDB ObjectId string. However, it does not validate this input. If the attacker inputs something like `id[$ne]=`, this will cause a NoSQL injection, and this query will cause the server error, making it crash and down for all other users.
 
-2. Briefly explain how a malicious attacker can exploit them.
+2. Briefly explain how a malicious attacker can exploit them.  
 An attacker can perform a flood attack by sending thousands of requests per second to `/userinfo`, exhausting server or database capacity. Since there's no rate limiting or throttling, the server keeps processing all requests until it becomes unresponsive.
 They can also inject malicious codes like `id[$ne]=` to cause server error, resulting in a denial of service for other users.
 
