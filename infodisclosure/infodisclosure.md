@@ -30,10 +30,10 @@ This will create a database in MongoDB called __infodisclosure__. Verify its pre
 
 Answer the following:
 
-1. Briefly explain the potential vulnerabilities in **insecure.ts**
+1. Briefly explain the potential vulnerabilities in **insecure.ts**  
 The server assumes the user input would be a string, and directly use the input in the database query. But the user input can be some database query or a malicious object instead of a string that will result in the leak of sensitive information like user login data.
 
-2. Briefly explain how a malicious attacker can exploit them.
+2. Briefly explain how a malicious attacker can exploit them.  
 The attacker can inject some database query like `username[$ne]=` as the input to be executed when the server receives and deals with the request, in order to retrieve sensitive data from the database.
 
 3. Briefly explain the defensive techniques used in **secure.ts** to prevent the information disclosure vulnerability?
