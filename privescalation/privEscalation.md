@@ -30,7 +30,7 @@ Answer the following:
  - It does not sanitize or restrict malicious input. It is vulnerable to injection attacks.
  - There is no logging or audit trail. It is vulnerable to repudiation.
 
-2. Briefly explain how a malicious attacker can exploit them.
+2. Briefly explain how a malicious attacker can exploit them.  
 The attacker can enter `1` as the userId and update the user role to `user` so that the true admin will lose their administrative rights.
 
 3. Briefly explain the defensive techniques used in **secure.ts** to prevent the privilege escalation vulnerability?
